@@ -20,7 +20,7 @@
 #include "global_header_file.h"
 
 
-#define CYCLE_TIME							100u
+#define CYCLE_TIME							1000u
 
 static uint32_t u32_cycle_time_ms 			= 0;
 static uint32_t u32_current_time_instace 	= 0;
@@ -43,6 +43,8 @@ int main(void)
 			// do nothing
 		}
 
+		const char *msg = "Hello UART3 (VCP)!\r\n"; // stored in ROM
+
 		u32_current_time_instace = HAL_GetTick();
 
 		if( ( u32_current_time_instace - u32_cycle_time_ms ) == CYCLE_TIME )
@@ -55,6 +57,8 @@ int main(void)
 
 			HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_14);
 			//HAL_Delay (500);   /* Insert delay 100 ms */
+
+			HAL_UART_Transmit(&huart3, (uint8_t*)msg, (uint16_t)strlen(msg), 100);
 
 			u32_cycle_time_ms = HAL_GetTick();
 		}

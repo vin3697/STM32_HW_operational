@@ -378,6 +378,7 @@ void Error_Handler(void)
   /* User can add his own implementation to report the HAL error return state */
   __disable_irq();
   while (1)
+	  //!make the system off!
   {
   }
   /* USER CODE END Error_Handler_Debug */

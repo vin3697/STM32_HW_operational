@@ -66,3 +66,40 @@ These are the core ST applications used in this project:
 - Prefer using **HAL** at the beginning for readability; you can later move to **LL** or register-level code for tighter control.
 
 ---
+
+## STM32 UART Monitor (Python + Tkinter)
+
+A small Windows GUI tool to **send/receive UART messages** from an STM32.
+You can select **COM port**, set **baud rate**, **Start/Stop** the serial stream, and **Send** text.
+
+### Requirements
+
+* Python 3.x (Windows)
+* `tkinter` (comes with Python)
+* `pyserial`
+
+### Install
+
+```bash
+pip install pyserial
+```
+
+### Run
+
+```bash
+python uart_gui.py
+```
+
+### Usage
+
+1. Plug in your USB-UART / ST-Link VCP device
+2. Select the **COM port**
+3. Set **baud** (e.g., `115200`)
+4. Click **Start**
+5. Type a message → **Send** (adds `\r\n` by default)
+6. Click **Stop** to close the port
+
+### Notes
+
+* If you see **garbage characters** → baud rate mismatch / clock config issue.
+* If you see **no data** → wrong COM port, wiring (TX/RX/GND), or missing driver.
