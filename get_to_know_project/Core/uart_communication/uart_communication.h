@@ -11,7 +11,7 @@
 	#include "global_header_file.h"
 
 	// System defines
-	#define CYCLE_TIME				1000u
+	#define CYCLE_TIME				100u
 	#define TOGGGLE_LED_YELLOW		0x00
 	#define TOGGGLE_LED_BLUE		0x01
 	#define TOGGGLE_LED_RED 		0x02

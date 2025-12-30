@@ -35,9 +35,9 @@ void turn_off_system(void)
 {
 
 	// turn off the system
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOB, LD1_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOB, LD2_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOB, LD3_Pin, GPIO_PIN_RESET);
 
 	return;
 }
@@ -67,7 +67,7 @@ void execute_control( g_system_t *const arg_g_system )
 		{
 
 			control_LEDs( 	GPIOB, 		GPIOB, 		GPIOB,
-							GPIO_PIN_0, GPIO_PIN_7, GPIO_PIN_14);
+							LD1_Pin, 	LD2_Pin, 	LD3_Pin);
 
 			break;
 		}
@@ -76,7 +76,7 @@ void execute_control( g_system_t *const arg_g_system )
 		{
 
 			control_LEDs( 	GPIOB, 		GPIOB, 		GPIOB,
-							GPIO_PIN_7, GPIO_PIN_0, GPIO_PIN_14);
+							LD2_Pin, 	LD1_Pin, 	LD3_Pin);
 
 			break;
 		}
@@ -85,7 +85,7 @@ void execute_control( g_system_t *const arg_g_system )
 		{
 
 			control_LEDs( 	GPIOB, 		GPIOB, 		GPIOB,
-							GPIO_PIN_14, GPIO_PIN_0, GPIO_PIN_7);
+							LD3_Pin, 	LD1_Pin, 	LD2_Pin);
 
 			break;
 		}
@@ -112,68 +112,66 @@ void project_uart_main(g_system_t *const arg_g_system)
 	}
 	else
 	{
-		// do nothing
+
+		arg_g_system->u32_current_time_instace 	= HAL_GetTick();
+
+		if( ( arg_g_system->u32_current_time_instace - arg_g_system->u32_cycle_time_ms ) >= CYCLE_TIME )
+		{
+
+			// read the input
+			// done at the UART interrupt receiving
+			arg_g_system->u8_operation_command 		= g_u8_uart_rxByte[0];
+
+			// processing the inputs
+			// none
+
+
+			// system mode selection : work mode and system off
+			if( (OP_CMD_MIN <= arg_g_system->u8_operation_command) && ( arg_g_system->u8_operation_command <= OP_CMD_MAX))
+			{
+				arg_g_system->system_mode = work_mode;
+			}
+			else
+			{
+				arg_g_system->system_mode = inactive_mode;
+			}
+
+
+			// execution of the system operations
+			switch(arg_g_system->system_mode)
+			{
+
+				case work_mode:
+				{
+					// Operation
+					execute_control( arg_g_system );
+					break;
+				}
+
+				case inactive_mode:
+				{
+					turn_off_system();
+					break;
+				}
+
+				default:
+				{
+					turn_off_system();
+					break;
+				}
+
+			}
+
+			// send the information to GUI or on UART
+			HAL_UART_Transmit(&huart3, &arg_g_system->u8_operation_command, 1, 100);
+
+			arg_g_system->u32_cycle_time_ms = HAL_GetTick();
+
+		}else{
+				// do nothing
+		}
+
 	}
-
-	arg_g_system->u32_current_time_instace 	= HAL_GetTick();
-
-	if( ( arg_g_system->u32_current_time_instace - arg_g_system->u32_cycle_time_ms ) >= CYCLE_TIME )
-	{
-
-		// read the input
-		// done at the UART interrupt receiving
-		arg_g_system->u8_operation_command 		= g_u8_uart_rxByte[0];
-
-		// processing the inputs
-		// none
-
-
-		// system mode selection : work mode and system off
-		if( (OP_CMD_MIN <= arg_g_system->u8_operation_command) && ( arg_g_system->u8_operation_command <= OP_CMD_MAX))
-		{
-			arg_g_system->system_mode = work_mode;
-		}
-		else
-		{
-			arg_g_system->system_mode = inactive_mode;
-		}
-
-
-		// execution of the system operations
-		switch(arg_g_system->system_mode)
-		{
-
-			case work_mode:
-			{
-				// Operation
-				execute_control( arg_g_system );
-				break;
-			}
-
-			case inactive_mode:
-			{
-				turn_off_system();
-				break;
-			}
-
-			default:
-			{
-				turn_off_system();
-				break;
-			}
-
-		}
-
-		// send the information to GUI or on UART
-		HAL_UART_Transmit(&huart3, &arg_g_system->u8_operation_command, 1, 100);
-
-		arg_g_system->u32_cycle_time_ms = HAL_GetTick();
-
-	}else{
-			// do nothing
-	}
-
-
 	return;
 }
 

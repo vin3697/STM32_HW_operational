@@ -17,7 +17,7 @@
 
 	extern g_system_t g_system;
 	// UART communication
-	extern 	uint8_t g_u8_uart_rxByte[1];
+	extern uint8_t g_u8_uart_rxByte[1];
 
 
 	// function declaration
