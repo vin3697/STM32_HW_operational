@@ -1,5 +1,9 @@
 
 # STM32 UART Monitor (Python Tkinter GUI)
+![alt text](images/uart_demo_light.gif)
+
+### GUI Image
+![alt text](images/GUI_ss.png)
 
 A small Windows-friendly UART monitor to **send HEX payloads** and **view received bytes in HEX**.
 Made for quick STM32 bring-up / “system mode” testing.
@@ -133,8 +137,7 @@ Example: if STM32 expects a single command byte (`0x00`, `0x01`, `0x02`), send:
 * Catch invalid HEX input and show a friendly messagebox (handle `ValueError`)
 * Optional logging to file
 
-### GUI Image
-![alt text](images/GUI_ss.png)
+
 
 ---
 
