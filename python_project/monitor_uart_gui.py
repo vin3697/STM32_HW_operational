@@ -113,7 +113,8 @@ class UartGui(tk.Tk):
                 text = data.decode("utf-8", errors="replace")
                 # show bytes as numbers (0–255)
                 # self.rx_text.insert("end", " ".join(str(b) for b in data) + "\n")
-                self.rx_text.insert("end", data.hex(" ").upper() + "\n")
+                # self.rx_text.insert("end", data.hex(" ").upper() + "\n")
+                self.rx_text.insert("end", f"[Received Hex] {data.hex(' ').upper()}\n")
                 # self.rx_text.insert("end", text)
                 # self.rx_text.see("end")
         except serial.SerialException as e:

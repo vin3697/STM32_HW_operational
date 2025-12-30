@@ -103,3 +103,6 @@ python uart_gui.py
 
 * If you see **garbage characters** → baud rate mismatch / clock config issue.
 * If you see **no data** → wrong COM port, wiring (TX/RX/GND), or missing driver.
+
+### GUI Image
+![alt text](images/GUI_ss.png)
