@@ -111,8 +111,11 @@ class UartGui(tk.Tk):
             if n:
                 data = self.ser.read(n)
                 text = data.decode("utf-8", errors="replace")
-                self.rx_text.insert("end", text)
-                self.rx_text.see("end")
+                # show bytes as numbers (0–255)
+                # self.rx_text.insert("end", " ".join(str(b) for b in data) + "\n")
+                self.rx_text.insert("end", data.hex(" ").upper() + "\n")
+                # self.rx_text.insert("end", text)
+                # self.rx_text.see("end")
         except serial.SerialException as e:
             self.log_line(f"\n[ERROR] {e}\n")
             self.status_var.set("Error")
@@ -131,10 +134,17 @@ class UartGui(tk.Tk):
 
         try:
             # Common STM32 pattern: send with CRLF
-            payload = (msg + "\r\n").encode("utf-8")
+            #payload = (msg + "\r\n").encode("utf-8")
+            #self.ser.write(payload)
+            #self.log_line(f"\n[Transmitted message] {msg}\n")
+            #self.tx_var.set("")
+            # Example input: "01 0A FF 00"  or "010AFF00"
+            hex_str = msg.replace("0x", "").replace(",", " ").strip()
+            payload = bytes.fromhex(hex_str)      # converts hex string -> bytes
             self.ser.write(payload)
-            self.log_line(f"\n[TX] {msg}\n")
+            self.log_line(f"\n[Transmitted HEX] {payload.hex(' ').upper()}\n")
             self.tx_var.set("")
+            
         except serial.SerialException as e:
             messagebox.showerror("Serial error", str(e))
 

@@ -14,7 +14,6 @@
 	void MX_USART3_UART_Init(void);
 	void MX_USB_OTG_FS_PCD_Init(void);
 	void project_init(void);
-
-
+	void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart);
 
 #endif // __INIT_HEADER__

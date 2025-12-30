@@ -25,45 +25,67 @@
 static uint32_t u32_cycle_time_ms 			= 0;
 static uint32_t u32_current_time_instace 	= 0;
 
-static uint8_t	b_first_cycle				= 0xFF;
+const char *led_on_msg = "LED On \r\n"; // stored in ROM
+
 /**
   * @brief  The application entry point.
   * @retval int
   */
 int main(void)
 {
+
+	project_init();
+
 	while(1)
 	{
-		if(b_first_cycle == 0xFF)
-		{
-			project_init();
-		}
-		else
-		{
-			// do nothing
-		}
-
-		const char *msg = "Hello UART3 (VCP)!\r\n"; // stored in ROM
 
 		u32_current_time_instace = HAL_GetTick();
 
-		if( ( u32_current_time_instace - u32_cycle_time_ms ) == CYCLE_TIME )
+		// g_u8_uart_rxByte_ascii = (uint8_t)('0' + g_u8_uart_rxByte[0]);
+
+		if( ( u32_current_time_instace - u32_cycle_time_ms ) >= CYCLE_TIME )
 		{
-			HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
-			//HAL_Delay (500);   /* Insert delay 100 ms */
 
-			HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_7);
-			//HAL_Delay (500);   /* Insert delay 100 ms */
+			switch (g_u8_uart_rxByte[0])
+			{
 
-			HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_14);
-			//HAL_Delay (500);   /* Insert delay 100 ms */
+				case 0:
+				{
+					HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0); // yellow
+					//HAL_Delay (500);   /* Insert delay 100 ms */
+					break;
+				}
 
-			HAL_UART_Transmit(&huart3, (uint8_t*)msg, (uint16_t)strlen(msg), 100);
+				case 1:
+				{
+					HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_7);	// blue
+					//HAL_Delay (500);   /* Insert delay 100 ms */
+					break;
+				}
+
+				case 2:
+				{
+					HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_14);	// red
+					//HAL_Delay (500);   /* Insert delay 100 ms */
+					break;
+				}
+
+				default:
+				{
+					break;
+				}
+
+			 }
+
+			HAL_UART_Transmit(&huart3, g_u8_uart_rxByte, 1, 100);
 
 			u32_cycle_time_ms = HAL_GetTick();
 		}
+		else
+		{
+				// do nothing
+		}
 
-		b_first_cycle = 0x00;
 	}
 }
 

@@ -53,14 +53,25 @@ void project_init(void)
 
 	  /* Initialize all configured peripherals */
 	  MX_GPIO_Init();
+
+	  // Ehternet?
 	  MX_ETH_Init();
+
+	  // i2c
 	  MX_I2C1_Init();
+
+	  // UART Communication
 	  MX_USART3_UART_Init();
+	  HAL_UART_Receive_IT(&huart3, g_u8_uart_rxByte, 1); // length is one byte
+
 	  MX_USB_OTG_FS_PCD_Init();
 
 
 	return;
 }
+
+
+
 /**
   * @brief System Clock Configuration
   * @retval None
@@ -239,6 +250,10 @@ void MX_ETH_Init(void)
   /* USER CODE BEGIN USART3_Init 2 */
 
   /* USER CODE END USART3_Init 2 */
+
+  // Manually enable the UART global interrupt in the NVIC
+  HAL_NVIC_SetPriority(USART3_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(USART3_IRQn);
 
 }
 
