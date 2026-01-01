@@ -14,7 +14,7 @@ This repo contains:
 ## 1) Python UART Monitor (Tkinter GUI)
 
 A Windows-friendly UART monitor to **send HEX payloads** and **view received bytes in HEX**.
-Made for quick STM32 bring-up / “system mode” testing.:contentReference[oaicite:6]{index=6}
+Made for quick STM32 bring-up / “system mode” testing.
 
 ### Features
 - ✅ GUI built with **Tkinter**
@@ -30,7 +30,7 @@ Made for quick STM32 bring-up / “system mode” testing.:contentReference[oaic
 
 ### Requirements
 - Python 3.x
-- `pyserial`:contentReference[oaicite:10]{index=10}
+- `pyserial`
 
 Install:
 ```bash
